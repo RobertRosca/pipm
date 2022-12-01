@@ -6,7 +6,7 @@ from installer.sources import WheelSource
 from installer import install as _install
 from packaging.version import Version
 
-from pipz._installer.destinations import WheelMultiDestination
+from pipm._installer.destinations import WheelMultiDestination
 
 
 def install(
