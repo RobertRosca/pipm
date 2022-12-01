@@ -18,7 +18,7 @@ Note:
 
 ## Context
 
-The following is taken from the original post from the Python forums, the post can be found here:
+The following is taken from the original post from the Python forums, the post can be found here: <https://discuss.python.org/t/environments-with-a-shared-package-installation-directory-julia-like-packaging/21576>
 
 This is a proof of concept implementation of a Julia-like approach to packaging in Python. For those not familiar, here is a summarised version of the [background to the Julia package manager](https://pkgdocs.julialang.org/v1/#Background-and-Design) (I recommend reading the page fully for those interested):
 
