@@ -12,10 +12,24 @@ from pipm._installer.destinations import WheelMultiDestination
 app = Typer()
 
 
+def edit_sitecustomize():
+    sitecustomize = Path(sysconfig.get_path("purelib")) / "sitecustomize.py"
+    text = sitecustomize.read_text()
+    line = "import sys; from pipm.path_finder import PipmPathFinder; sys.meta_path.insert(0, PipmPathFinder())"
+    if line not in text:
+        print("Edited sitecustomize.py")
+        text = "\n".join([text, line])
+        sitecustomize.write_text(text)
+
+
 @app.command()
-def main(path: Path = Path.cwd()):
+def main(path: Path = Path.cwd(), sitecustomize: bool = True):
     """Download wheels for current project into `tmp-wheelhouse`, and install
     them into the multi-site-packages directory."""
+
+    if sitecustomize:
+        edit_sitecustomize()
+
     echo("Fetching wheels...")
     subprocess.run(["pip", "download", ".", "-d", f"{path / 'tmp-wheelhouse'}"])
 
