@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-multi-package"
+name = "pipm"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
@@ -9,12 +9,13 @@ python = "^3.10"
 typer = "^0.7.0"
 installer = "^0.5.1"
 packaging = "^21.3"
+tomli = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 
 [tool.poetry.scripts]
-pipz = "python_multi_package.cli:app"
+pipm = "pipm.cli:app"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

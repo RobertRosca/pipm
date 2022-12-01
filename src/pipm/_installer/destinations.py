@@ -1,14 +1,12 @@
 import os
 from pathlib import Path
 
-from installer.destinations import (
-    SchemeDictionaryDestination as _SchemeDictionaryDestination,
-)
+from installer.destinations import SchemeDictionaryDestination
 from installer.utils import Scheme
 from packaging.version import Version
 
 
-class WheelMultiDestination(_SchemeDictionaryDestination):
+class WheelMultiDestination(SchemeDictionaryDestination):
     version: Version
     distribution: str
 

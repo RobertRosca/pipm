@@ -1,5 +1,3 @@
-"""Core wheel installation logic."""
-
 from typing import Dict
 
 from installer.sources import WheelSource
@@ -25,4 +23,7 @@ def install(
     destination.distribution = source.distribution
     destination.version = Version(source.version)
 
-    return _install(source, destination, additional_metadata)
+    try:
+        _install(source, destination, additional_metadata)
+    except FileExistsError:
+        pass

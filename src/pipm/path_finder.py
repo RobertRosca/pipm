@@ -1,51 +1,43 @@
+import sys
+import sysconfig
 from importlib.machinery import PathFinder
 from pathlib import Path
-import sys
 from typing import Optional
+from functools import cache
+
 import tomli
 
 
-class LockfileSpecs:
-    def __init__(self):
-        self.path = self.get_closest_lockfile()
+@cache
+def get_closest_lockfile(directory: Path) -> Optional[Path]:
+    while True:
+        poetry_lock = directory / "poetry.lock"
+        if poetry_lock.exists():
+            return poetry_lock
+        if directory == directory.parent:
+            break
+        directory = directory.parent
 
-    @property
-    def packages(self) -> dict:
-        if self.path is None:
-            return {}
-        packages = tomli.load(self.path.open("rb"))["package"]
-        return {p["name"]: p["version"] for p in packages}
-
-    def get_closest_lockfile(self) -> Optional[Path]:
-        directory = Path.cwd()
-
-        while True:
-            poetry_lock = directory / "poetry.lock"
-            if poetry_lock.exists():
-                return poetry_lock
-            if directory == directory.parent:
-                break
-            directory = directory.parent
-
-        return None
+    return None
 
 
-LFS = LockfileSpecs().packages
+@cache
+def get_packages(lockfile: Path) -> dict:
+    if lockfile is None:
+        return {}
+    packages = tomli.load(lockfile.open("rb"))["package"]
+    return {p["name"]: p["version"] for p in packages}
 
 
-class PipzPathFinder:
+class PipmPathFinder:
     @classmethod
     def find_spec(cls, fullname, path=None, target=None):
         if path is None:
             path = sys.path
-        if fullname in LFS:
-            version = LFS[fullname]
-            path.insert(
-                0,
-                (
-                    "/home/roscar/work/github.com/RobertRosca/python-multi-package/"
-                    f".venv/lib/python3.10/multi-site-packages/{fullname}/{version}"
-                ),
-            )
+        packages = get_packages(get_closest_lockfile(Path.cwd()))
+        if fullname in packages:
+            version = packages[fullname]
+            msp = sysconfig.get_paths()["platstdlib"] + "/multi-site-packages"
+            path.insert(0, f"{msp}/{fullname}/{version}")
         spec = PathFinder.find_spec(fullname, path, target)
         return spec
