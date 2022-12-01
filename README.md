@@ -1,5 +1,23 @@
 # `pipm` - Proof of Concept for Julia-Like Package Management in Python
 
+## Quick Start
+
+1. Install project with poetry
+2. Enter poetry shell
+3. Go to another poetry-based project directory, a lock file must exist
+4. Run `pipm` - this will **edit sitecustomize.py** for your current environment to add a custom python import finder, download wheels for that project and install them
+5. While in this directory the version of a package which is specified in the lock file will be used
+6. Go into another directory with a different poetry lock file, run `pipm`, and now the version of packages in that lock file will be available
+
+Note:
+
+- This is a very basic proof of concept that will only work in equally basic scenarios
+- `pipm` installs wheels via `pip download .`, this means that only dependencies under `tool.poetry.dependencies` will be installed, not `dev-dependencies` or others
+- Packages without wheels won't work
+- Packages with headers/executable entry points probably won't work
+
+## Context
+
 The following is taken from the original post from the Python forums, the post can be found here:
 
 This is a proof of concept implementation of a Julia-like approach to packaging in Python. For those not familiar, here is a summarised version of the [background to the Julia package manager](https://pkgdocs.julialang.org/v1/#Background-and-Design) (I recommend reading the page fully for those interested):
